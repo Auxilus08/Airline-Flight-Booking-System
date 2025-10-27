@@ -17,6 +17,8 @@ import passengerRoutes from './routes/passenger.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
 import airportRoutes from './routes/airport.routes.js';
 import healthRoutes from './routes/health.routes.js';
+import userRoutes from './routes/user.routes.js';
+import paymentRoutes from './routes/payment.routes.js';
 
 // Load environment variables
 dotenv.config();
@@ -60,6 +62,8 @@ app.use('/api/flights', flightRoutes);
 app.use('/api/passengers', passengerRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/airports', airportRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/payments', paymentRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {
@@ -72,6 +76,8 @@ app.get('/', (req, res) => {
       passengers: '/api/passengers',
       bookings: '/api/bookings',
       airports: '/api/airports',
+      users: '/api/users',
+      payments: '/api/payments',
     },
   });
 });
