@@ -90,6 +90,14 @@ GRANT CREATE VIEW TO your_username;
 
 **Solution:** Fixed trigger to use :NEW.ticket_id instead of sequence
 
+### Issue 5: Mutating Table Error (ORA-04091)
+**Problem:** Trigger `trg_update_booking_total` tried to SELECT from TICKETS while inserting into TICKETS
+
+**Solution:** Removed the trigger - booking total is now calculated in the application layer (backend) before insertion. This is actually better practice as it:
+- Avoids Oracle mutating table restrictions
+- Gives application control over business logic
+- Prevents unexpected total recalculations
+
 ## Verification Queries
 
 After installation, verify with these queries:

@@ -359,15 +359,8 @@ BEGIN
 END;
 /
 
--- Update booking total when ticket is added
-CREATE OR REPLACE TRIGGER trg_update_booking_total
-AFTER INSERT ON TICKETS FOR EACH ROW
-BEGIN
-    UPDATE BOOKINGS
-    SET total_amount = (SELECT SUM(price) FROM TICKETS WHERE booking_id = :NEW.booking_id)
-    WHERE booking_id = :NEW.booking_id;
-END;
-/
+-- Note: Booking total calculation is handled in the application layer
+-- to avoid mutating table trigger errors
 
 -- Prevent double booking
 CREATE OR REPLACE TRIGGER trg_prevent_double_booking
