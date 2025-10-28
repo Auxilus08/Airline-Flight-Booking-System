@@ -229,9 +229,9 @@ PROMPT '';
 
 PROMPT 'Adding foreign key constraints...';
 
-ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_airline FOREIGN KEY (airline_id) REFERENCES AIRLINES(airline_id) ON DELETE RESTRICT;
-ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_origin FOREIGN KEY (origin_airport_id) REFERENCES AIRPORTS(airport_id) ON DELETE RESTRICT;
-ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_destination FOREIGN KEY (destination_airport_id) REFERENCES AIRPORTS(airport_id) ON DELETE RESTRICT;
+ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_airline FOREIGN KEY (airline_id) REFERENCES AIRLINES(airline_id);
+ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_origin FOREIGN KEY (origin_airport_id) REFERENCES AIRPORTS(airport_id);
+ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_destination FOREIGN KEY (destination_airport_id) REFERENCES AIRPORTS(airport_id);
 ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_route FOREIGN KEY (route_id) REFERENCES route(route_id);
 ALTER TABLE FLIGHTS ADD CONSTRAINT fk_flights_aircraft FOREIGN KEY (aircraft_id) REFERENCES aircraft(aircraft_id);
 
@@ -239,7 +239,7 @@ ALTER TABLE BOOKINGS ADD CONSTRAINT fk_bookings_user FOREIGN KEY (user_id) REFER
 ALTER TABLE BOOKINGS ADD CONSTRAINT fk_bookings_passenger FOREIGN KEY (passenger_id) REFERENCES PASSENGERS(passenger_id) ON DELETE CASCADE;
 
 ALTER TABLE TICKETS ADD CONSTRAINT fk_tickets_booking FOREIGN KEY (booking_id) REFERENCES BOOKINGS(booking_id) ON DELETE CASCADE;
-ALTER TABLE TICKETS ADD CONSTRAINT fk_tickets_flight FOREIGN KEY (flight_id) REFERENCES FLIGHTS(flight_id) ON DELETE RESTRICT;
+ALTER TABLE TICKETS ADD CONSTRAINT fk_tickets_flight FOREIGN KEY (flight_id) REFERENCES FLIGHTS(flight_id);
 ALTER TABLE TICKETS ADD CONSTRAINT fk_tickets_seat FOREIGN KEY (seat_id) REFERENCES seat(seat_id);
 
 ALTER TABLE PAYMENTS ADD CONSTRAINT fk_payments_booking FOREIGN KEY (booking_id) REFERENCES BOOKINGS(booking_id) ON DELETE CASCADE;
@@ -260,7 +260,6 @@ CREATE INDEX idx_flights_flight_number ON FLIGHTS(flight_number);
 CREATE INDEX idx_flights_airline_id ON FLIGHTS(airline_id);
 CREATE INDEX idx_flights_route_id ON FLIGHTS(route_id);
 CREATE INDEX idx_flights_departure ON FLIGHTS(departure_time);
-CREATE INDEX idx_passengers_email ON PASSENGERS(email);
 CREATE INDEX idx_bookings_booking_date ON BOOKINGS(booking_date);
 CREATE INDEX idx_bookings_passenger ON BOOKINGS(passenger_id);
 CREATE INDEX idx_tickets_booking_id ON TICKETS(booking_id);
@@ -355,7 +354,7 @@ CREATE OR REPLACE TRIGGER trg_generate_ticket_number
 BEFORE INSERT ON TICKETS FOR EACH ROW
 BEGIN
     IF :NEW.ticket_number IS NULL THEN
-        :NEW.ticket_number := 'TKT' || LPAD(ticket_seq.CURRVAL, 10, '0');
+        :NEW.ticket_number := 'TKT' || LPAD(:NEW.ticket_id, 10, '0');
     END IF;
 END;
 /
@@ -400,7 +399,8 @@ PROMPT '';
 
 PROMPT 'Creating views...';
 
-CREATE OR REPLACE VIEW v_flight_schedule AS
+BEGIN
+    EXECUTE IMMEDIATE 'CREATE OR REPLACE VIEW v_flight_schedule AS
 SELECT
     f.flight_id,
     f.flight_number,
@@ -421,12 +421,19 @@ SELECT
 FROM FLIGHTS f
 JOIN AIRLINES a ON f.airline_id = a.airline_id
 JOIN AIRPORTS ao ON f.origin_airport_id = ao.airport_id
-JOIN AIRPORTS ad ON f.destination_airport_id = ad.airport_id;
+JOIN AIRPORTS ad ON f.destination_airport_id = ad.airport_id';
+    DBMS_OUTPUT.PUT_LINE('View v_flight_schedule created successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Warning: Could not create v_flight_schedule view - ' || SQLERRM);
+END;
+/
 
-CREATE OR REPLACE VIEW v_booking_summary AS
+BEGIN
+    EXECUTE IMMEDIATE 'CREATE OR REPLACE VIEW v_booking_summary AS
 SELECT
     b.booking_id,
-    p.first_name || ' ' || p.last_name AS passenger_name,
+    p.first_name || '' '' || p.last_name AS passenger_name,
     p.email AS passenger_email,
     p.phone AS passenger_phone,
     f.flight_number,
@@ -445,7 +452,13 @@ JOIN PASSENGERS p ON b.passenger_id = p.passenger_id
 JOIN TICKETS t ON b.booking_id = t.booking_id
 JOIN FLIGHTS f ON t.flight_id = f.flight_id
 JOIN AIRPORTS ao ON f.origin_airport_id = ao.airport_id
-JOIN AIRPORTS ad ON f.destination_airport_id = ad.airport_id;
+JOIN AIRPORTS ad ON f.destination_airport_id = ad.airport_id';
+    DBMS_OUTPUT.PUT_LINE('View v_booking_summary created successfully.');
+EXCEPTION
+    WHEN OTHERS THEN
+        DBMS_OUTPUT.PUT_LINE('Warning: Could not create v_booking_summary view - ' || SQLERRM);
+END;
+/
 
 PROMPT 'Views created.';
 PROMPT '';
