@@ -30,11 +30,11 @@ const FlightModel = {
         a.total_seats,
         (a.total_seats - (
           SELECT COUNT(*) 
-          FROM ticket t 
+          FROM TICKETS t 
           WHERE t.flight_id = f.flight_id 
             AND t.status != 'CANCELLED'
         )) AS available_seats
-      FROM flight f
+      FROM FLIGHTS f
       JOIN route r ON f.route_id = r.route_id
       JOIN airport ao ON r.origin_airport_id = ao.airport_id
       JOIN airport ad ON r.destination_airport_id = ad.airport_id
@@ -92,7 +92,7 @@ const FlightModel = {
         a.economy_seats,
         a.business_seats,
         a.first_class_seats
-      FROM flight f
+      FROM FLIGHTS f
       JOIN route r ON f.route_id = r.route_id
       JOIN airport ao ON r.origin_airport_id = ao.airport_id
       JOIN airport ad ON r.destination_airport_id = ad.airport_id

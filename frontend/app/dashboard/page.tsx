@@ -14,11 +14,54 @@ export default function DashboardPage() {
   const dashboardData = useDashboardData()
 
   const renderTabContent = () => {
+    // Show loading state
+    if (dashboardData.isLoading) {
+      return (
+        <div className="p-6 flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Loading dashboard data...</p>
+          </div>
+        </div>
+      )
+    }
+
+    // Show error state
+    if (dashboardData.error) {
+      return (
+        <div className="p-6 flex items-center justify-center min-h-[400px]">
+          <div className="text-center">
+            <p className="text-destructive mb-2">Error loading dashboard data</p>
+            <p className="text-muted-foreground text-sm">{dashboardData.error}</p>
+          </div>
+        </div>
+      )
+    }
+
     switch (activeTab) {
       case "bookings":
         return <MyBookingsTab data={dashboardData} />
       case "profile":
-        return <ProfileTab data={dashboardData} />
+        // Create a default profile if none exists
+        const profileData = {
+          userProfile: dashboardData.userProfile || {
+            id: "1",
+            firstName: "",
+            lastName: "",
+            email: "",
+            phone: "",
+            dateOfBirth: "",
+            nationality: "",
+            passportNumber: "",
+            address: "",
+            city: "",
+            state: "",
+            zipCode: "",
+            country: "",
+          },
+          updateUserProfile: dashboardData.updateUserProfile,
+        }
+        return <ProfileTab data={profileData} />
       case "payments":
         return <PaymentHistoryTab data={dashboardData} />
       case "notifications":
@@ -41,7 +84,7 @@ export default function DashboardPage() {
   }
 
   return (
-    <DashboardLayout activeTab={activeTab} onTabChange={setActiveTab}>
+    <DashboardLayout activeTab={activeTab} onTabChange={(tab) => setActiveTab(tab as TabType)}>
       {renderTabContent()}
     </DashboardLayout>
   )

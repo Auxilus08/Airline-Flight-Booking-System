@@ -77,6 +77,8 @@ export const api = {
 
   // Bookings
   bookings: {
+    getAll: () => fetchAPI('/bookings'),
+    
     create: (data: any) =>
       fetchAPI('/bookings', {
         method: 'POST',
@@ -96,6 +98,8 @@ export const api = {
 
   // Passengers
   passengers: {
+    getAll: () => fetchAPI('/passengers'),
+    
     create: (data: any) =>
       fetchAPI('/passengers', {
         method: 'POST',
@@ -108,6 +112,11 @@ export const api = {
       fetchAPI(`/passengers/${id}`, {
         method: 'PUT',
         body: JSON.stringify(data),
+      }),
+    
+    delete: (id: string) =>
+      fetchAPI(`/passengers/${id}`, {
+        method: 'DELETE',
       }),
   },
 
@@ -137,8 +146,11 @@ export const api = {
       }),
     
     getByBookingId: (bookingId: string) =>
-      fetchAPI(`/payments/${bookingId}`),
+      fetchAPI(`/payments/booking/${bookingId}`),
+    
+    getAll: () => fetchAPI('/payments'),
   },
 };
 
 export default api;
+

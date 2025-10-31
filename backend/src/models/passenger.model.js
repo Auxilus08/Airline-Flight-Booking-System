@@ -21,7 +21,7 @@ const PassengerModel = {
         date_of_birth,
         nationality,
         created_at
-      FROM passenger
+      FROM PASSENGERS
       ORDER BY created_at DESC
     `;
     
@@ -43,7 +43,7 @@ const PassengerModel = {
         date_of_birth,
         nationality,
         created_at
-      FROM passenger
+      FROM PASSENGERS
       WHERE passenger_id = :id
     `;
     
@@ -65,7 +65,7 @@ const PassengerModel = {
         date_of_birth,
         nationality,
         created_at
-      FROM passenger
+      FROM PASSENGERS
       WHERE UPPER(email) = UPPER(:email)
     `;
     
@@ -77,7 +77,7 @@ const PassengerModel = {
    */
   async create(passengerData) {
     const sql = `
-      INSERT INTO passenger (
+      INSERT INTO PASSENGERS (
         passenger_id,
         first_name,
         last_name,
@@ -120,7 +120,7 @@ const PassengerModel = {
    */
   async update(id, passengerData) {
     const sql = `
-      UPDATE passenger SET
+      UPDATE PASSENGERS SET
         first_name = :first_name,
         last_name = :last_name,
         email = :email,
@@ -150,7 +150,7 @@ const PassengerModel = {
    * Delete passenger
    */
   async delete(id) {
-    const sql = `DELETE FROM passenger WHERE passenger_id = :id`;
+    const sql = `DELETE FROM PASSENGERS WHERE passenger_id = :id`;
     const result = await db.execute(sql, [id], { autoCommit: true });
     return result.rowsAffected > 0;
   },

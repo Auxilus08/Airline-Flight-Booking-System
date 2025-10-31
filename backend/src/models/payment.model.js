@@ -7,6 +7,31 @@ import db from '../config/db.js';
 
 const PaymentModel = {
   /**
+   * Get all payments
+   */
+  async findAll() {
+    const sql = `
+      SELECT 
+        p.payment_id,
+        p.booking_id,
+        p.amount,
+        p.payment_date,
+        p.method,
+        p.payment_method,
+        p.status,
+        p.transaction_id,
+        p.transaction_reference,
+        b.booking_date,
+        b.total_amount as booking_amount
+      FROM PAYMENTS p
+      LEFT JOIN BOOKINGS b ON p.booking_id = b.booking_id
+      ORDER BY p.payment_date DESC
+    `;
+    
+    return await db.query(sql);
+  },
+
+  /**
    * Create new payment
    */
   async create(paymentData) {

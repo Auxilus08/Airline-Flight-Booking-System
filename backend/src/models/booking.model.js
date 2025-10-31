@@ -20,9 +20,9 @@ const BookingModel = {
         p.first_name || ' ' || p.last_name AS passenger_name,
         p.email AS passenger_email,
         COUNT(t.ticket_id) AS ticket_count
-      FROM booking b
-      JOIN passenger p ON b.passenger_id = p.passenger_id
-      LEFT JOIN ticket t ON b.booking_id = t.booking_id
+      FROM BOOKINGS b
+      JOIN PASSENGERS p ON b.passenger_id = p.passenger_id
+      LEFT JOIN TICKETS t ON b.booking_id = t.booking_id
       GROUP BY b.booking_id, b.booking_date, b.total_amount, 
                b.booking_status, b.payment_status, 
                p.first_name, p.last_name, p.email
@@ -101,8 +101,8 @@ const BookingModel = {
         b.booking_status,
         b.payment_status,
         COUNT(t.ticket_id) AS ticket_count
-      FROM booking b
-      LEFT JOIN ticket t ON b.booking_id = t.booking_id
+      FROM BOOKINGS b
+      LEFT JOIN TICKETS t ON b.booking_id = t.booking_id
       WHERE b.passenger_id = :passengerId
       GROUP BY b.booking_id, b.booking_date, b.total_amount, 
                b.booking_status, b.payment_status

@@ -10,6 +10,12 @@ import { validate } from '../middleware/validator.js';
 const router = express.Router();
 
 /**
+ * @route   GET /api/payments
+ * @desc    Get all payments
+ */
+router.get('/', PaymentController.getAll);
+
+/**
  * @route   POST /api/payments
  * @desc    Process payment with transaction
  */

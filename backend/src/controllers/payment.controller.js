@@ -9,6 +9,21 @@ import { asyncHandler } from '../middleware/errorHandler.js';
 
 const PaymentController = {
   /**
+   * @route   GET /api/payments
+   * @desc    Get all payments
+   * @access  Private
+   */
+  getAll: asyncHandler(async (req, res) => {
+    const payments = await PaymentModel.findAll();
+    
+    res.json({
+      success: true,
+      count: payments.length,
+      data: payments,
+    });
+  }),
+
+  /**
    * @route   POST /api/payments
    * @desc    Process payment with transaction
    * @access  Private
