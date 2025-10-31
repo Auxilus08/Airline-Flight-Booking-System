@@ -113,35 +113,33 @@ const FlightModel = {
         f.flight_number,
         f.departure_time,
         f.arrival_time,
+        f.duration_minutes,
+        f.price,
+        f.available_seats,
         f.status,
-        f.base_price,
-        ao.airport_code AS origin_code,
+        a.name AS airline_name,
+        a.iata_code AS airline_code,
+        ao.code AS origin_code,
         ao.city AS origin_city,
-        ad.airport_code AS destination_code,
+        ao.name AS origin_airport,
+        ad.code AS destination_code,
         ad.city AS destination_city,
-        r.duration_minutes,
-        a.aircraft_model,
-        (a.total_seats - (
-          SELECT COUNT(*) 
-          FROM ticket t 
-          WHERE t.flight_id = f.flight_id 
-            AND t.status != 'CANCELLED'
-        )) AS available_seats
-      FROM flight f
-      JOIN route r ON f.route_id = r.route_id
-      JOIN airport ao ON r.origin_airport_id = ao.airport_id
-      JOIN airport ad ON r.destination_airport_id = ad.airport_id
-      JOIN aircraft a ON f.aircraft_id = a.aircraft_id
+        ad.name AS destination_airport
+      FROM FLIGHTS f
+      JOIN AIRLINES a ON f.airline_id = a.airline_id
+      JOIN AIRPORTS ao ON f.origin_airport_id = ao.airport_id
+      JOIN AIRPORTS ad ON f.destination_airport_id = ad.airport_id
       WHERE UPPER(ao.city) = UPPER(:origin)
         AND UPPER(ad.city) = UPPER(:destination)
-        AND f.status = 'SCHEDULED'
+        AND f.status IN ('scheduled', 'SCHEDULED')
+        AND f.available_seats > 0
     `;
     
-    const binds = [origin, destination];
+    const binds = { origin, destination };
     
     if (departureDate) {
       sql += ` AND TRUNC(f.departure_time) = TO_DATE(:departureDate, 'YYYY-MM-DD')`;
-      binds.push(departureDate);
+      binds.departureDate = departureDate;
     }
     
     sql += ` ORDER BY f.departure_time`;

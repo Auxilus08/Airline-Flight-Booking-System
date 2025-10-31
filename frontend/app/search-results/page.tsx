@@ -1,6 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { SearchResultsHeader } from "@/components/search-results/search-results-header"
 import { FilterSidebar } from "@/components/search-results/filter-sidebar"
 import { FlightCard } from "@/components/search-results/flight-card"
@@ -10,13 +11,33 @@ import { useFlightSearch } from "@/hooks/use-flight-search"
 import type { Flight, SearchFilters } from "@/types/flight"
 
 export default function SearchResultsPage() {
-  const [filters, setFilters] = useState<SearchFilters>({
+  const searchParams = useSearchParams()
+  
+  // Get search parameters from URL
+  const from = searchParams?.get("from") || ""
+  const to = searchParams?.get("to") || ""
+  const date = searchParams?.get("date") || ""
+  
+  const [filters, setFilters] = useState<SearchFilters & { from?: string; to?: string; date?: string }>({
+    from,
+    to,
+    date,
     priceRange: [0, 5000],
     departureTime: [],
     airlines: [],
     stops: [],
     sortBy: "price-low-high",
   })
+
+  // Update filters when URL params change
+  useEffect(() => {
+    setFilters(prev => ({
+      ...prev,
+      from: from || prev.from,
+      to: to || prev.to,
+      date: date || prev.date,
+    }))
+  }, [from, to, date])
 
   const { flights, loading, error } = useFlightSearch(filters)
   const [filteredFlights, setFilteredFlights] = useState<Flight[]>([])

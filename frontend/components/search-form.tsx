@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { motion } from "framer-motion"
@@ -18,19 +19,22 @@ interface SearchFormProps {
 }
 
 const AIRPORTS = [
-  { code: "JFK", city: "New York" },
-  { code: "LAX", city: "Los Angeles" },
-  { code: "ORD", city: "Chicago" },
-  { code: "DFW", city: "Dallas" },
-  { code: "DEN", city: "Denver" },
-  { code: "SFO", city: "San Francisco" },
-  { code: "MIA", city: "Miami" },
-  { code: "BOS", city: "Boston" },
+  { code: "DEL", city: "New Delhi" },
+  { code: "BOM", city: "Mumbai" },
+  { code: "BLR", city: "Bengaluru" },
+  { code: "HYD", city: "Hyderabad" },
+  { code: "CCU", city: "Kolkata" },
+  { code: "MAA", city: "Chennai" },
+  { code: "AMD", city: "Ahmedabad" },
+  { code: "COK", city: "Kochi" },
+  { code: "GOI", city: "Goa" },
+  { code: "PNQ", city: "Pune" },
 ]
 
 const TRAVEL_CLASSES = ["Economy", "Business", "First"]
 
 export function SearchForm() {
+  const router = useRouter()
   const [formData, setFormData] = useState<SearchFormProps>({
     origin: "",
     destination: "",
@@ -45,7 +49,24 @@ export function SearchForm() {
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("Search submitted:", formData)
+    
+    // Validate required fields
+    if (!formData.origin || !formData.destination || !formData.departDate) {
+      alert("Please fill in all required fields: origin, destination, and departure date")
+      return
+    }
+    
+    // Build query parameters
+    const params = new URLSearchParams({
+      from: formData.origin,
+      to: formData.destination,
+      date: formData.departDate,
+      passengers: formData.passengers.toString(),
+      class: formData.travelClass,
+    })
+    
+    // Navigate to search results page
+    router.push(`/search-results?${params.toString()}`)
   }
 
   return (

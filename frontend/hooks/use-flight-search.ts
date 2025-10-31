@@ -2,120 +2,77 @@
 
 import { useState, useEffect } from "react"
 import type { Flight, SearchFilters } from "@/types/flight"
+import api from "@/lib/api"
 
-// Mock API - replace with real API call
-const mockFlights: Flight[] = [
-  {
-    id: "1",
-    airline: "United Airlines",
-    flightNumber: "UA123",
-    departureCode: "LAX",
-    departureCity: "Los Angeles",
-    departureTime: "08:00",
-    arrivalCode: "JFK",
-    arrivalCity: "New York",
-    arrivalTime: "16:30",
-    duration: "5h 30m",
-    stops: 0,
-    price: 245,
-    seatsAvailable: 8,
-  },
-  {
-    id: "2",
-    airline: "Delta",
-    flightNumber: "DL456",
-    departureCode: "LAX",
-    departureCity: "Los Angeles",
-    departureTime: "10:15",
-    arrivalCode: "JFK",
-    arrivalCity: "New York",
-    arrivalTime: "18:45",
-    duration: "5h 30m",
-    stops: 0,
-    price: 289,
-    seatsAvailable: 3,
-  },
-  {
-    id: "3",
-    airline: "American Airlines",
-    flightNumber: "AA789",
-    departureCode: "LAX",
-    departureCity: "Los Angeles",
-    departureTime: "14:00",
-    arrivalCode: "JFK",
-    arrivalCity: "New York",
-    arrivalTime: "22:15",
-    duration: "5h 15m",
-    stops: 0,
-    price: 199,
-    seatsAvailable: 12,
-  },
-  {
-    id: "4",
-    airline: "Southwest",
-    flightNumber: "SW234",
-    departureCode: "LAX",
-    departureCity: "Los Angeles",
-    departureTime: "06:30",
-    arrivalCode: "JFK",
-    arrivalCity: "New York",
-    arrivalTime: "14:45",
-    duration: "5h 15m",
-    stops: 0,
-    price: 219,
-    seatsAvailable: 15,
-  },
-  {
-    id: "5",
-    airline: "United Airlines",
-    flightNumber: "UA567",
-    departureCode: "LAX",
-    departureCity: "Los Angeles",
-    departureTime: "12:00",
-    arrivalCode: "JFK",
-    arrivalCity: "New York",
-    arrivalTime: "20:30",
-    duration: "5h 30m",
-    stops: 1,
-    price: 159,
-    seatsAvailable: 6,
-  },
-  {
-    id: "6",
-    airline: "Delta",
-    flightNumber: "DL890",
-    departureCode: "LAX",
-    departureCity: "Los Angeles",
-    departureTime: "18:45",
-    arrivalCode: "JFK",
-    arrivalCity: "New York",
-    arrivalTime: "03:15",
-    duration: "6h 30m",
-    stops: 1,
-    price: 139,
-    seatsAvailable: 9,
-  },
-]
+// Helper function to format duration from minutes to "Xh Ym" format
+function formatDuration(minutes: number): string {
+  const hours = Math.floor(minutes / 60)
+  const mins = minutes % 60
+  return `${hours}h ${mins}m`
+}
 
-export function useFlightSearch(filters: SearchFilters) {
+// Helper function to format time from ISO timestamp
+function formatTime(timestamp: string): string {
+  const date = new Date(timestamp)
+  return date.toLocaleTimeString('en-US', { 
+    hour: '2-digit', 
+    minute: '2-digit',
+    hour12: false 
+  })
+}
+
+export function useFlightSearch(filters: SearchFilters & { from?: string; to?: string; date?: string }) {
   const [flights, setFlights] = useState<Flight[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    // Simulate API call
-    const timer = setTimeout(() => {
-      try {
-        setFlights(mockFlights)
+    async function fetchFlights() {
+      // Skip if no search parameters
+      if (!filters.from || !filters.to) {
         setLoading(false)
-      } catch (err) {
-        setError("Failed to load flights")
+        return
+      }
+
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const response: any = await api.flights.search({
+          from: filters.from,
+          to: filters.to,
+          date: filters.date,
+        })
+        
+        // Transform backend data to frontend format
+        const transformedFlights: Flight[] = response.data.map((flight: any) => ({
+          id: flight.FLIGHT_ID?.toString() || flight.flight_id?.toString(),
+          airline: flight.AIRLINE_NAME || flight.airline_name || 'Unknown Airline',
+          flightNumber: flight.FLIGHT_NUMBER || flight.flight_number,
+          departureCode: flight.ORIGIN_CODE || flight.origin_code,
+          departureCity: flight.ORIGIN_CITY || flight.origin_city,
+          departureTime: formatTime(flight.DEPARTURE_TIME || flight.departure_time),
+          arrivalCode: flight.DESTINATION_CODE || flight.destination_code,
+          arrivalCity: flight.DESTINATION_CITY || flight.destination_city,
+          arrivalTime: formatTime(flight.ARRIVAL_TIME || flight.arrival_time),
+          duration: formatDuration(flight.DURATION_MINUTES || flight.duration_minutes),
+          stops: 0, // Backend doesn't track stops yet
+          price: parseFloat(flight.PRICE || flight.price || 0),
+          seatsAvailable: parseInt(flight.AVAILABLE_SEATS || flight.available_seats || 0),
+        }))
+        
+        setFlights(transformedFlights)
+      } catch (err: any) {
+        console.error('Failed to fetch flights:', err)
+        setError(err.message || 'Failed to load flights')
+        setFlights([])
+      } finally {
         setLoading(false)
       }
-    }, 800)
+    }
 
-    return () => clearTimeout(timer)
-  }, [filters])
+    fetchFlights()
+  }, [filters.from, filters.to, filters.date])
 
   return { flights, loading, error }
 }
