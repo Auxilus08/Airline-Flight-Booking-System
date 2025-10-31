@@ -191,7 +191,7 @@ This project is created for educational purposes.
 
 ## 👥 Authors
 
-- Your Name - Initial work
+- Your Name - Akshat Tiwari
 
 ## 🙏 Acknowledgments
 
