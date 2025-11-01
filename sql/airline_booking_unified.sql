@@ -926,9 +926,11 @@ BEGIN
   SELECT NVL(MAX(aircraft_id), 0) INTO l_max_id FROM aircraft;
   sync_sequence('aircraft_seq', l_max_id);
   
+  
   SELECT NVL(MAX(route_id), 0) INTO l_max_id FROM route;
   sync_sequence('route_seq', l_max_id);
   
+
   SELECT NVL(MAX(flight_id), 9999) INTO l_max_id FROM FLIGHTS;
   sync_sequence('flight_seq', l_max_id);
   
@@ -964,6 +966,6 @@ EXCEPTION
 END;
 /
 
-PROMPT '============================================';
+PROMPT '===========================================';
 PROMPT 'All sample data inserted and sequences synced!';
-PROMPT '============================================';
+PROMPT '===========================================';
