@@ -11,6 +11,7 @@ import db from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 // Import routes
+import aircraftRoutes from './routes/aircraft.routes.js';
 import airlineRoutes from './routes/airline.routes.js';
 import flightRoutes from './routes/flight.routes.js';
 import passengerRoutes from './routes/passenger.routes.js';
@@ -58,6 +59,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/health', healthRoutes);
 
 // API routes
+app.use('/api/aircraft', aircraftRoutes);
 app.use('/api/airlines', airlineRoutes);
 app.use('/api/flights', flightRoutes);
 app.use('/api/passengers', passengerRoutes);
