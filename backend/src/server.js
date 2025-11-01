@@ -2,7 +2,6 @@
  * Express Server Configuration
  * Main entry point for the Airline Ticket Booking System backend
  */
-
 import express from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
@@ -12,6 +11,7 @@ import db from './config/db.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 
 // Import routes
+import airlineRoutes from './routes/airline.routes.js';
 import flightRoutes from './routes/flight.routes.js';
 import passengerRoutes from './routes/passenger.routes.js';
 import bookingRoutes from './routes/booking.routes.js';
@@ -58,6 +58,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use('/api/health', healthRoutes);
 
 // API routes
+app.use('/api/airlines', airlineRoutes);
 app.use('/api/flights', flightRoutes);
 app.use('/api/passengers', passengerRoutes);
 app.use('/api/bookings', bookingRoutes);
