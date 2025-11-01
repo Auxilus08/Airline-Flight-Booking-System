@@ -31,7 +31,7 @@ const UserModel = {
       WHERE LOWER(email) = LOWER(:email)
     `;
     
-    return await db.queryOne(sql, [email]);
+    return await db.queryOne(sql, { email });
   },
 
   /**
@@ -51,7 +51,7 @@ const UserModel = {
       WHERE LOWER(username) = LOWER(:username)
     `;
     
-    return await db.queryOne(sql, [username]);
+    return await db.queryOne(sql, { username });
   },
 
   /**
@@ -71,7 +71,7 @@ const UserModel = {
       WHERE user_id = :id
     `;
     
-    return await db.queryOne(sql, [id]);
+    return await db.queryOne(sql, { id });
   },
 
   /**
@@ -103,6 +103,7 @@ const UserModel = {
       full_name: userData.full_name || null,
       role: userData.role || 'customer',
       active: 1,
+      created_at: userData.created_at || { val: new Date(), dir: db.oracledb.BIND_IN },
       id: { dir: db.oracledb.BIND_OUT, type: db.oracledb.NUMBER },
     };
 
@@ -130,7 +131,7 @@ const UserModel = {
         AND active = 1
     `;
 
-    const user = await db.queryOne(sql, [username]);
+    const user = await db.queryOne(sql, { username });
     
     if (!user) {
       return null;
@@ -182,7 +183,7 @@ const UserModel = {
       WHERE user_id = :user_id
     `;
 
-    const user = await db.queryOne(sql, [userId]);
+    const user = await db.queryOne(sql, { user_id: userId });
     
     if (!user) {
       throw new Error('User not found');

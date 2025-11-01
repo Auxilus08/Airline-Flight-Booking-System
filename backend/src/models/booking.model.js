@@ -15,7 +15,7 @@ const BookingModel = {
         b.booking_id,
         b.booking_date,
         b.total_amount,
-        b.booking_status,
+        b.status,
         b.payment_status,
         p.first_name || ' ' || p.last_name AS passenger_name,
         p.email AS passenger_email,
@@ -24,7 +24,7 @@ const BookingModel = {
       JOIN PASSENGERS p ON b.passenger_id = p.passenger_id
       LEFT JOIN TICKETS t ON b.booking_id = t.booking_id
       GROUP BY b.booking_id, b.booking_date, b.total_amount, 
-               b.booking_status, b.payment_status, 
+               b.status, b.payment_status, 
                p.first_name, p.last_name, p.email
       ORDER BY b.booking_date DESC
     `;
@@ -55,7 +55,7 @@ const BookingModel = {
       WHERE b.booking_id = :id
     `;
     
-    const booking = await db.queryOne(sql, [id]);
+  const booking = await db.queryOne(sql, { id });
     
     if (booking) {
       // Get tickets for this booking
@@ -83,7 +83,7 @@ const BookingModel = {
         WHERE t.booking_id = :booking_id
       `;
       
-      booking.tickets = await db.query(ticketsSql, [id]);
+      booking.tickets = await db.query(ticketsSql, { booking_id: id });
     }
     
     return booking;
@@ -98,18 +98,18 @@ const BookingModel = {
         b.booking_id,
         b.booking_date,
         b.total_amount,
-        b.booking_status,
+        b.status,
         b.payment_status,
         COUNT(t.ticket_id) AS ticket_count
       FROM BOOKINGS b
       LEFT JOIN TICKETS t ON b.booking_id = t.booking_id
       WHERE b.passenger_id = :passengerId
       GROUP BY b.booking_id, b.booking_date, b.total_amount, 
-               b.booking_status, b.payment_status
+               b.status, b.payment_status
       ORDER BY b.booking_date DESC
     `;
     
-    return await db.query(sql, [passengerId]);
+    return await db.query(sql, { passengerId });
   },
 
   /**
@@ -177,16 +177,18 @@ const BookingModel = {
             user_id,
             passenger_id,
             booking_date,
-            total_amount,
             status,
-            payment_status
+            total_amount,
+            payment_status,
+            created_at
           ) VALUES (
             :user_id,
             :passenger_id,
             SYSDATE,
-            :total_amount,
             :status,
-            :payment_status
+            :total_amount,
+            :payment_status,
+            SYSTIMESTAMP
           ) RETURNING booking_id INTO :id
         `;
         
@@ -251,9 +253,7 @@ const BookingModel = {
                 AND available_seats > 0
             `;
             
-            const updateResult = await connection.execute(updateSeats, {
-              flight_id: ticket.flight_id
-            });
+            const updateResult = await connection.execute(updateSeats, { flight_id: ticket.flight_id });
 
             if (updateResult.rowsAffected === 0) {
               throw new Error(`Failed to update seat availability for flight ${ticket.flight_id}`);
@@ -310,14 +310,14 @@ const BookingModel = {
       
       const ticketsResult = await connection.execute(
         getTickets,
-        [id],
+        { id },
         { outFormat: db.oracledb.OUT_FORMAT_OBJECT }
       );
 
       // Update booking status
       await connection.execute(
         `UPDATE BOOKINGS SET status = 'cancelled' WHERE booking_id = :id`,
-        [id]
+        { id }
       );
       
       // Update all tickets status and restore available seats
@@ -365,7 +365,7 @@ const BookingModel = {
       ORDER BY b.booking_date DESC
     `;
     
-    return await db.query(sql, [userId]);
+    return await db.query(sql, { userId });
   },
 };
 
