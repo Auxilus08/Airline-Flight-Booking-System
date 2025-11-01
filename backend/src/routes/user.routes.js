@@ -50,6 +50,8 @@ router.get('/profile/:id',
   UserController.getProfile
 );
 
+router.get('/', UserController.getAllUsers);
+
 /**
  * @route   PUT /api/users/profile/:id
  * @desc    Update user profile

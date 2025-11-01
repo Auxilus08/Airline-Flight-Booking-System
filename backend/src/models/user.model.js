@@ -13,6 +13,13 @@ const UserModel = {
   hashPassword(password) {
     return crypto.createHash('sha256').update(password).digest('hex');
   },
+  
+  async findAll() {
+    const sql = `SELECT user_id, username, email, full_name, role, active, created_at FROM USERS`;
+    const result = await db.execute(sql);
+    return result.rows || [];  // safely return empty array if undefined
+  },
+
 
   /**
    * Find user by email

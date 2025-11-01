@@ -135,8 +135,8 @@ const FlightModel = {
       JOIN AIRLINES a ON f.airline_id = a.airline_id
       JOIN AIRPORTS ao ON f.origin_airport_id = ao.airport_id
       JOIN AIRPORTS ad ON f.destination_airport_id = ad.airport_id
-      WHERE UPPER(ao.city) = UPPER(:origin)
-        AND UPPER(ad.city) = UPPER(:destination)
+      WHERE UPPER(ao.code) = UPPER(:origin)
+        AND UPPER(ad.code) = UPPER(:destination)
         AND UPPER(f.status) = 'SCHEDULED'
     `;
 
