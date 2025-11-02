@@ -85,7 +85,8 @@ const PassengerModel = {
         phone,
         passport_number,
         date_of_birth,
-        nationality
+        nationality,
+        created_at
       ) VALUES (
         passenger_seq.NEXTVAL,
         :first_name,
@@ -94,7 +95,8 @@ const PassengerModel = {
         :phone,
         :passport_number,
         TO_DATE(:date_of_birth, 'YYYY-MM-DD'),
-        :nationality
+        :nationality,
+        SYSTIMESTAMP
       ) RETURNING passenger_id INTO :id
     `;
     
@@ -109,7 +111,7 @@ const PassengerModel = {
       id: { dir: db.oracledb.BIND_OUT, type: db.oracledb.NUMBER },
     };
     
-    const result = await db.execute(sql, binds, { autoCommit: true });
+  const result = await db.execute(sql, binds, { autoCommit: true });
     const passengerId = result.outBinds.id[0];
     
     return await this.findById(passengerId);
@@ -151,7 +153,7 @@ const PassengerModel = {
    */
   async delete(id) {
     const sql = `DELETE FROM PASSENGERS WHERE passenger_id = :id`;
-    const result = await db.execute(sql, [id], { autoCommit: true });
+    const result = await db.execute(sql, { id }, { autoCommit: true });
     return result.rowsAffected > 0;
   },
 };

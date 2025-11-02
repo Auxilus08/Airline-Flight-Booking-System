@@ -151,17 +151,17 @@
 
   @supports (color: lab(0% 0 0)) {
     :root, :host {
-      --color-red-50: lab(96.5005% 4.18508 1.52328);
+      --color-red-50: lab(96.5005% 4.18511 1.52329);
       --color-red-100: lab(92.243% 10.2865 3.83865);
-      --color-red-300: lab(76.5514% 36.422 15.5335);
-      --color-red-400: lab(63.7053% 60.745 31.3109);
+      --color-red-300: lab(76.5514% 36.4219 15.5335);
+      --color-red-400: lab(63.7053% 60.7449 31.3109);
       --color-red-600: lab(48.4493% 77.4328 61.5452);
       --color-red-800: lab(33.7174% 55.8993 41.0293);
       --color-yellow-100: lab(97.3564% -4.51407 27.344);
       --color-yellow-800: lab(38.7484% 23.5833 51.4916);
-      --color-green-100: lab(96.1861% -13.8464 6.52365);
+      --color-green-100: lab(96.186% -13.8464 6.52362);
       --color-green-800: lab(37.4616% -36.7971 22.9692);
-      --color-gray-100: lab(96.1596% -.0823438 -1.13575);
+      --color-gray-100: lab(96.1596% -.082314 -1.13575);
       --color-gray-800: lab(16.1051% -1.18239 -11.7533);
     }
   }
@@ -5905,32 +5905,32 @@
     --card-foreground: lab(3.04768% -1.31044 -4.08459);
     --popover: lab(100% 0 0);
     --popover-foreground: lab(3.04768% -1.31044 -4.08459);
-    --primary: lab(35.7269% -9.27331 -46.1411);
+    --primary: lab(35.7269% -9.27332 -46.1411);
     --primary-foreground: lab(97.6956% -1.63329 -3.29721);
     --secondary: lab(90.7483% -3.20742 -6.5629);
     --secondary-foreground: lab(3.04768% -1.31044 -4.08459);
     --muted: lab(90.7356% -1.63162 -3.29628);
-    --muted-foreground: lab(47.8245% -3.13094 -6.52562);
+    --muted-foreground: lab(47.8245% -3.13097 -6.52561);
     --accent: lab(57.6323% 60.0115 55.6971);
     --accent-foreground: lab(100% 0 0);
     --destructive: lab(48.4493% 77.4328 61.5452);
     --destructive-foreground: lab(48.4493% 77.4328 61.5452);
     --border: lab(90.7356% -1.63162 -3.29628);
     --input: lab(97.6956% -1.63329 -3.29721);
-    --ring: lab(35.7269% -9.27331 -46.1411);
-    --chart-1: lab(35.7269% -9.27331 -46.1411);
+    --ring: lab(35.7269% -9.27332 -46.1411);
+    --chart-1: lab(35.7269% -9.27332 -46.1411);
     --chart-2: lab(57.6323% 60.0115 55.6971);
-    --chart-3: lab(54.5664% -31.2941 -12.8478);
+    --chart-3: lab(54.5664% -31.294 -12.8478);
     --chart-4: lab(63.9354% 13.0899 -42.7122);
-    --chart-5: lab(47.0007% -3.24479 -50.2754);
+    --chart-5: lab(47.0007% -3.24476 -50.2754);
     --sidebar: lab(97.6956% -1.63329 -3.29721);
     --sidebar-foreground: lab(3.04768% -1.31044 -4.08459);
-    --sidebar-primary: lab(35.7269% -9.27331 -46.1411);
+    --sidebar-primary: lab(35.7269% -9.27332 -46.1411);
     --sidebar-primary-foreground: lab(97.6956% -1.63329 -3.29721);
     --sidebar-accent: lab(57.6323% 60.0115 55.6971);
     --sidebar-accent-foreground: lab(100% 0 0);
     --sidebar-border: lab(90.7356% -1.63162 -3.29628);
-    --sidebar-ring: lab(35.7269% -9.27331 -46.1411);
+    --sidebar-ring: lab(35.7269% -9.27332 -46.1411);
   }
 }
 
@@ -5972,18 +5972,18 @@
 @supports (color: lab(0% 0 0)) {
   .dark {
     --background: lab(1.56292% -.472337 -1.23248);
-    --foreground: lab(94.2156% -1.63248 -3.29677);
+    --foreground: lab(94.2156% -1.63248 -3.29676);
     --card: lab(5.27539% -1.12788 -2.68247);
-    --card-foreground: lab(94.2156% -1.63248 -3.29677);
+    --card-foreground: lab(94.2156% -1.63248 -3.29676);
     --popover: lab(5.27539% -1.12788 -2.68247);
-    --popover-foreground: lab(94.2156% -1.63248 -3.29677);
+    --popover-foreground: lab(94.2156% -1.63248 -3.29676);
     --primary: lab(59.1721% -14.6862 -46.6769);
     --primary-foreground: lab(1.56292% -.472337 -1.23248);
     --secondary: lab(13.0118% -1.55585 -3.2584);
-    --secondary-foreground: lab(94.2156% -1.63248 -3.29677);
-    --muted: lab(18.8127% -1.57347 -3.26655);
+    --secondary-foreground: lab(94.2156% -1.63248 -3.29676);
+    --muted: lab(18.8127% -1.57347 -3.26654);
     --muted-foreground: lab(65.2265% -3.17189 -6.5451);
-    --accent: lab(69.2723% 59.5059 52.4823);
+    --accent: lab(69.2723% 59.5058 52.4823);
     --accent-foreground: lab(1.56292% -.472337 -1.23248);
     --destructive: lab(28.5139% 44.5539 29.0463);
     --destructive-foreground: lab(55.4814% 75.0732 48.8528);
@@ -5991,15 +5991,15 @@
     --input: lab(5.27539% -1.12788 -2.68247);
     --ring: lab(59.1721% -14.6862 -46.6769);
     --chart-1: lab(59.1721% -14.6862 -46.6769);
-    --chart-2: lab(69.2723% 59.5059 52.4823);
+    --chart-2: lab(69.2723% 59.5058 52.4823);
     --chart-3: lab(66.1711% -31.3595 -12.905);
     --chart-4: lab(69.7628% 12.7029 -42.8);
     --chart-5: lab(58.7199% -5.55909 -50.5326);
     --sidebar: lab(3.05297% -.765227 -1.88784);
-    --sidebar-foreground: lab(94.2156% -1.63248 -3.29677);
+    --sidebar-foreground: lab(94.2156% -1.63248 -3.29676);
     --sidebar-primary: lab(59.1721% -14.6862 -46.6769);
-    --sidebar-primary-foreground: lab(94.2156% -1.63248 -3.29677);
-    --sidebar-accent: lab(69.2723% 59.5059 52.4823);
+    --sidebar-primary-foreground: lab(94.2156% -1.63248 -3.29676);
+    --sidebar-accent: lab(69.2723% 59.5058 52.4823);
     --sidebar-accent-foreground: lab(1.56292% -.472337 -1.23248);
     --sidebar-border: lab(13.0118% -1.55585 -3.2584);
     --sidebar-ring: lab(59.1721% -14.6862 -46.6769);

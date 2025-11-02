@@ -7,6 +7,11 @@ import UserModel from '../models/user.model.js';
 import { asyncHandler } from '../middleware/errorHandler.js';
 
 const UserController = {
+  getAllUsers: asyncHandler(async (req, res) => {
+    const users = await UserModel.findAll();
+    res.json({ success: true, data: users });
+  }),
+
   /**
    * @route   POST /api/users/register
    * @desc    Register new user
@@ -127,7 +132,7 @@ const UserController = {
       data: user,
     });
   }),
-
+  
   /**
    * @route   PUT /api/users/password/:id
    * @desc    Change user password

@@ -92,7 +92,7 @@ const PaymentModel = {
       WHERE p.payment_id = :id
     `;
     
-    return await db.queryOne(sql, [id]);
+    return await db.queryOne(sql, { id });
   },
 
   /**
@@ -115,7 +115,7 @@ const PaymentModel = {
       ORDER BY p.payment_date DESC
     `;
     
-    return await db.query(sql, [bookingId]);
+    return await db.query(sql, { booking_id: bookingId });
   },
 
   /**
@@ -190,8 +190,8 @@ const PaymentModel = {
         id: { dir: db.oracledb.BIND_OUT, type: db.oracledb.NUMBER },
       };
 
-      const paymentResult = await connection.execute(paymentSql, paymentBinds);
-      const paymentId = paymentResult.outBinds.id[0];
+  const paymentResult = await connection.execute(paymentSql, paymentBinds);
+  const paymentId = paymentResult.outBinds.id[0];
 
       // Update booking status to confirmed
       const updateBooking = `
@@ -201,7 +201,7 @@ const PaymentModel = {
         WHERE booking_id = :booking_id
       `;
 
-      await connection.execute(updateBooking, { booking_id: paymentData.booking_id });
+  await connection.execute(updateBooking, { booking_id: paymentData.booking_id });
 
       // Get the created payment
       const getPayment = `

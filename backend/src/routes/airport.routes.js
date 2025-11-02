@@ -18,12 +18,13 @@ router.get(
     const sql = `
       SELECT 
         airport_id,
-        airport_code,
-        airport_name,
+        name AS airport_name,
+        code AS airport_code,
         city,
         country,
-        timezone
-      FROM airport
+        timezone,
+        created_at
+      FROM AIRPORTS
       ORDER BY city
     `;
     
@@ -47,16 +48,17 @@ router.get(
     const sql = `
       SELECT 
         airport_id,
-        airport_code,
-        airport_name,
+        name AS airport_name,
+        code AS airport_code,
         city,
         country,
-        timezone
-      FROM airport
+        timezone,
+        created_at
+      FROM AIRPORTS
       WHERE airport_id = :id
     `;
     
-    const airport = await db.queryOne(sql, [req.params.id]);
+    const airport = await db.queryOne(sql, { id: req.params.id });
     
     if (!airport) {
       res.status(404);
